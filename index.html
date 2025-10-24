@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Trusha 💖 - A Birthday Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #ff6b8b;
+            --secondary-pink: #ffd1dc;
+            --dark-pink: #8b3a62;
+            --light-pink: #f8f0f3;
+            --text-color: #5a2d3e;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--secondary-pink), #f8c8dc, #ffb6c1);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            padding: 2rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            color: var(--dark-pink);
+            background: linear-gradient(45deg, var(--dark-pink), var(--primary-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            line-height: 1.8;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .heart-btn {
+            background: none;
+            border: none;
+            font-size: 3rem;
+            cursor: pointer;
+            animation: pulse 2s infinite, glow 3s infinite alternate;
+            margin-top: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 10px rgba(255, 107, 139, 0.6));
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.3) rotate(10deg);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 107, 139, 0.6)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 107, 139, 0.9)); }
+        }
+
+        .memory-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .memory-frame {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            aspect-ratio: 3/4;
+            cursor: pointer;
+        }
+
+        .memory-frame:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .memory-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
+            z-index: -1;
+            border-radius: 15px;
+            opacity: 0.7;
+        }
+
+        .memory-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .memory-frame:hover .memory-icon {
+            transform: scale(1.2);
+        }
+
+        .memory-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-pink);
+        }
+
+        .memory-count {
+            font-size: 0.9rem;
+            color: #b76e79;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        /* Memory Gallery Modal */
+        .memory-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .memory-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+
+        .gallery-container {
+            padding: 2rem;
+            max-height: calc(90vh - 100px);
+            overflow-y: auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img, .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        /* Lightbox Modal */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-content img, .lightbox-content video {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 2rem;
+        }
+
+        .lightbox-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .shayari-box {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 700px;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .shayari-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4, #a18cd1);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .shayari-text {
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideIn 0.8s ease forwards;
+        }
+
+        .shayari-text:nth-child(1) { animation-delay: 0.2s; }
+        .shayari-text:nth-child(2) { animation-delay: 0.4s; }
+        .shayari-text:nth-child(3) { animation-delay: 0.6s; }
+        .shayari-text:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, var(--primary-pink), #ff8fa3);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .next-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .next-btn:hover::before {
+            left: 100%;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.4);
+        }
+
+        .birthday-message {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 800px;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .birthday-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><path fill="%23ff6b8b" d="M50,5 C60,5 70,10 75,20 C80,30 80,40 75,50 C70,60 60,65 50,65 C40,65 30,60 25,50 C20,40 20,30 25,20 C30,10 40,5 50,5 Z"/></svg>');
+        }
+
+        .birthday-message p {
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .birthday-message p:nth-child(1) { animation-delay: 0.2s; }
+        .birthday-message p:nth-child(2) { animation-delay: 0.4s; }
+        .birthday-message p:nth-child(3) { animation-delay: 0.6s; }
+        .birthday-message p:nth-child(4) { animation-delay: 0.8s; }
+        .birthday-message p:nth-child(5) { animation-delay: 1s; }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .love-letter {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            position: relative;
+            text-align: left;
+            line-height: 1.8;
+            backdrop-filter: blur(5px);
+        }
+
+        .love-letter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4, #a18cd1);
+            border-radius: 20px 0 0 20px;
+        }
+
+        .letter-content {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .letter-content:nth-child(1) { animation-delay: 0.3s; }
+        .letter-content:nth-child(2) { animation-delay: 0.6s; }
+        .letter-content:nth-child(3) { animation-delay: 0.9s; }
+        .letter-content:nth-child(4) { animation-delay: 1.2s; }
+        .letter-content:nth-child(5) { animation-delay: 1.5s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            text-align: right;
+            margin-top: 2rem;
+            color: var(--dark-pink);
+            opacity: 0;
+            animation: signatureReveal 1.5s ease 2s forwards;
+        }
+
+        @keyframes signatureReveal {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 107, 139, 0.6);
+            animation: float 15s linear infinite;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .easter-egg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+        }
+
+        .easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.3) rotate(15deg);
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+        }
+
+        .hidden-message {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--primary-pink);
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .show-message {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-pink);
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 1000;
+            border-radius: 50%;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-pink), #ff8fa3);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .page-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 90;
+        }
+
+        .page-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .page-dot.active {
+            background: var(--primary-pink);
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                padding: 1rem;
+            }
+            
+            .memory-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .memory-frame {
+                aspect-ratio: 4/3;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .shayari-box, .birthday-message, .love-letter {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .music-control {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .easter-egg {
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.5rem;
+            }
+            
+            .hidden-message {
+                bottom: 70px;
+                right: 15px;
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+        }
+
+        /* Loading animation */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-pink), #f8c8dc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-heart {
+            font-size: 4rem;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-heart">💖</div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress-bar"></div>
+
+    <!-- Background Elements -->
+    <div class="floating-hearts" id="hearts-container"></div>
+    <div class="stars" id="stars-container"></div>
+    
+    <!-- Music Control -->
+    <div class="music-control" id="music-control">
+        <span id="music-icon">🎵</span>
+    </div>
+    
+    <!-- Page Indicator -->
+    <div class="page-indicator" id="page-indicator"></div>
+    
+    <!-- Easter Egg -->
+    <div class="easter-egg" id="easter-egg">🌹</div>
+    <div class="hidden-message" id="hidden-message">I Love You ❤️</div>
+    
+    <!-- Memory Gallery Modal -->
+    <div class="memory-modal" id="memory-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Our Beautiful Memories</h3>
+                <button class="close-modal" id="close-modal">×</button>
+            </div>
+            <div class="gallery-container">
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Gallery items will be inserted here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightbox-modal">
+        <button class="lightbox-close" id="lightbox-close">×</button>
+        <div class="lightbox-content" id="lightbox-content">
+            <!-- Lightbox content will be inserted here dynamically -->
+        </div>
+        <div class="lightbox-nav">
+            <button class="lightbox-btn" id="lightbox-prev">‹</button>
+            <button class="lightbox-btn" id="lightbox-next">›</button>
+        </div>
+        <div class="lightbox-counter" id="lightbox-counter">1 / 10</div>
+    </div>
+    
+    <!-- Pages -->
+    <section class="page active" id="page1">
+        <h1>Hey Trusha…</h1>
+        <p>Raj has a little surprise for you 💖</p>
+        <p>Click the glowing heart to begin this journey of love and memories</p>
+        <button class="heart-btn" id="start-btn">💝</button>
+    </section>
+    
+    <section class="page" id="page2">
+        <h1>Our Memories</h1>
+        <p>"Every picture holds a story… and every story has you."</p>
+        <div class="memory-container">
+            <div class="memory-frame" data-category="beautiful">
+                <div class="memory-icon">🌹</div>
+                <h3 class="memory-title">Beautiful Memories</h3>
+                <div class="memory-count">3 Photos</div>
+            </div>
+            <div class="memory-frame" data-category="moments">
+                <div class="memory-icon">✨</div>
+                <h3 class="memory-title">Special Moments</h3>
+                <div class="memory-count">1 Video, 3 Photos</div>
+            </div>
+            <div class="memory-frame" data-category="laughter">
+                <div class="memory-icon">😄</div>
+                <h3 class="memory-title">Laughter Echoing</h3>
+                <div class="memory-count">4 Photos</div>
+            </div>
+        </div>
+        <button class="next-btn" id="page2-next">Continue the Journey</button>
+    </section>
+    
+    <section class="page" id="page3">
+        <h1>For You, My Love</h1>
+        <div class="shayari-box">
+            <p class="shayari-text">Tere muskaan mein kuch baat hai,</p>
+            <p class="shayari-text">Jo dil ko roz ek nayi shuruaat deti hai…</p>
+            <p class="shayari-text">Tere bina har pal adhura sa lagta hai,</p>
+            <p class="shayari-text">Tujhse milkar hi toh zindagi rangin lagti hai.</p>
+        </div>
+        <button class="next-btn" id="page3-next">Discover More</button>
+    </section>
+    
+    <section class="page" id="page4">
+        <h1>Happy Birthday, Trusha!</h1>
+        <div class="birthday-message">
+            <p>"On your special day, Raj just wants to say…"</p>
+            <p>You're the reason smiles exist 💖</p>
+            <p>Your laughter is my favorite melody</p>
+            <p>Your presence makes every moment magical</p>
+            <p>Happy Birthday, my love 🎉💫</p>
+        </div>
+        <button class="next-btn" id="page4-next">The Final Surprise</button>
+    </section>
+    
+    <section class="page" id="page5">
+        <h1>My Love Letter to You</h1>
+        <div class="love-letter">
+            <p class="letter-content">My Dearest Trusha,</p>
+            <p class="letter-content">As I sit down to write this, my heart overflows with emotions that words can barely capture. You're more than words, more than stars… you're the reason my world feels complete.</p>
+            <p class="letter-content">From the moment you entered my life, everything changed. Colors became brighter, days became happier, and my heart found its home. Your smile is my sunrise, your voice my favorite song, and your love my greatest treasure.</p>
+            <p class="letter-content">On your birthday, I wish for you all the happiness in the universe. May your life be filled with the same joy and warmth you bring to mine every single day.</p>
+            <p class="letter-content">You are my dream come true, my happy place, my everything.</p>
+            <p class="signature">Forever Yours,<br>Raj</p>
+        </div>
+        <button class="next-btn" id="restart-btn">Relive Our Story</button>
+    </section>
+
+    <audio id="bg-music" loop>
+        <!-- In a real implementation, you would link to an actual royalty-free romantic music file -->
+        <!-- This is a placeholder for the music -->
+    </audio>
+
+    <script>
+        // Memory data - replace these paths with your actual image and video paths
+        const memoryData = {
+            beautiful: {
+                title: "Beautiful Memories",
+                items: [
+                    { type: 'image', src: 'memory1.jpg', alt: 'Our beautiful memory 1' },
+                    { type: 'image', src: 'memory2.jpg', alt: 'Our beautiful memory 2' },
+                    { type: 'image', src: 'memory3.jpg', alt: 'Our beautiful memory 3' }
+                ]
+            },
+            moments: {
+                title: "Special Moments",
+                items: [
+                    { type: 'video', src: 'moment1.mp4', alt: 'Our special moment video' },
+                    { type: 'image', src: 'moment2.jpg', alt: 'Our special moment 2' },
+                    { type: 'image', src: 'moment3.jpg', alt: 'Our special moment 3' },
+                    { type: 'image', src: 'moment4.jpg', alt: 'Our special moment 4' }
+                ]
+            },
+            laughter: {
+                title: "Laughter Echoing",
+                items: [
+                    { type: 'image', src: 'laugh1.jpg', alt: 'Our laughter moment 1' },
+                    { type: 'image', src: 'laugh2.jpg', alt: 'Our laughter moment 2' },
+                    { type: 'image', src: 'laugh3.jpg', alt: 'Our laughter moment 3' },
+                    { type: 'image', src: 'laugh4.jpg', alt: 'Our laughter moment 4' }
+                ]
+            }
+        };
+
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const startBtn = document.getElementById('start-btn');
+        const page2Next = document.getElementById('page2-next');
+        const page3Next = document.getElementById('page3-next');
+        const page4Next = document.getElementById('page4-next');
+        const restartBtn = document.getElementById('restart-btn');
+        const musicControl = document.getElementById('music-control');
+        const musicIcon = document.getElementById('music-icon');
+        const bgMusic = document.getElementById('bg-music');
+        const easterEgg = document.getElementById('easter-egg');
+        const hiddenMessage = document.getElementById('hidden-message');
+        const heartsContainer = document.getElementById('hearts-container');
+        const starsContainer = document.getElementById('stars-container');
+        const progressBar = document.getElementById('progress-bar');
+        const pageIndicator = document.getElementById('page-indicator');
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        // Memory gallery elements
+        const memoryFrames = document.querySelectorAll('.memory-frame');
+        const memoryModal = document.getElementById('memory-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Lightbox elements
+        const lightboxModal = document.getElementById('lightbox-modal');
+        const lightboxContent = document.getElementById('lightbox-content');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const lightboxCounter = document.getElementById('lightbox-counter');
+
+        // Current page tracking
+        let currentPage = 0;
+        let currentGalleryItems = [];
+        let currentLightboxIndex = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500);
+
+            createHearts();
+            createPageIndicators();
+            updateProgressBar();
+            setupMemoryGallery();
+        });
+
+        // Page Navigation
+        function showPage(pageIndex) {
+            currentPage = pageIndex;
+            
+            pages.forEach((page, index) => {
+                if (index === pageIndex) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            
+            updateProgressBar();
+            updatePageIndicators();
+            
+            // Add special effects for specific pages
+            if (pageIndex === 3) {
+                createConfetti();
+            }
+            if (pageIndex === 4) {
+                createStars();
+            }
+        }
+
+        // Event Listeners for Navigation
+        startBtn.addEventListener('click', () => {
+            showPage(1);
+            playMusic();
+        });
+
+        page2Next.addEventListener('click', () => showPage(2));
+        page3Next.addEventListener('click', () => showPage(3));
+        page4Next.addEventListener('click', () => showPage(4));
+        restartBtn.addEventListener('click', () => showPage(0));
+
+        // Progress Bar
+        function updateProgressBar() {
+            const progress = (currentPage / (pages.length - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Page Indicators
+        function createPageIndicators() {
+            pages.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('page-dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => showPage(index));
+                pageIndicator.appendChild(dot);
+            });
+        }
+
+        function updatePageIndicators() {
+            const dots = document.querySelectorAll('.page-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentPage) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Memory Gallery Setup
+        function setupMemoryGallery() {
+            memoryFrames.forEach(frame => {
+                frame.addEventListener('click', () => {
+                    const category = frame.getAttribute('data-category');
+                    openMemoryGallery(category);
+                });
+            });
+
+            closeModal.addEventListener('click', closeMemoryGallery);
+            
+            // Close modal when clicking outside content
+            memoryModal.addEventListener('click', (e) => {
+                if (e.target === memoryModal) {
+                    closeMemoryGallery();
+                }
+            });
+
+            // Lightbox event listeners
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightboxPrev.addEventListener('click', showPrevLightboxItem);
+            lightboxNext.addEventListener('click', showNextLightboxItem);
+            
+            // Close lightbox when clicking outside content
+            lightboxModal.addEventListener('click', (e) => {
+                if (e.target === lightboxModal) {
+                    closeLightbox();
+                }
+            });
+
+            // Keyboard navigation for lightbox
+            document.addEventListener('keydown', (e) => {
+                if (lightboxModal.classList.contains('active')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowLeft') showPrevLightboxItem();
+                    if (e.key === 'ArrowRight') showNextLightboxItem();
+                }
+            });
+        }
+
+        function openMemoryGallery(category) {
+            const memory = memoryData[category];
+            if (!memory) return;
+
+            modalTitle.textContent = memory.title;
+            galleryGrid.innerHTML = '';
+
+            memory.items.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
+                
+                if (item.type === 'image') {
+                    galleryItem.innerHTML = `
+                        <img src="${item.src}" alt="${item.alt}" loading="lazy">
+                    `;
+                } else if (item.type === 'video') {
+                    galleryItem.innerHTML = `
+                        <video>
+                            <source src="${item.src}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-indicator">VIDEO</div>
+                    `;
+                }
+                
+                galleryItem.addEventListener('click', () => {
+                    openLightbox(category, index);
+                });
+                
+                galleryGrid.appendChild(galleryItem);
+            });
+
+            memoryModal.classList.add('active');
+        }
+
+        function closeMemoryGallery() {
+            memoryModal.classList.remove('active');
+        }
+
+        function openLightbox(category, index) {
+            const memory = memoryData[category];
+            if (!memory) return;
+
+            currentGalleryItems = memory.items;
+            currentLightboxIndex = index;
+            
+            updateLightboxContent();
+            lightboxModal.classList.add('active');
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.remove('active');
+            
+            // Pause any playing videos
+            const video = lightboxContent.querySelector('video');
+            if (video) {
+                video.pause();
+            }
+        }
+
+        function updateLightboxContent() {
+            const item = currentGalleryItems[currentLightboxIndex];
+            lightboxContent.innerHTML = '';
+
+            if (item.type === 'image') {
+                lightboxContent.innerHTML = `<img src="${item.src}" alt="${item.alt}">`;
+            } else if (item.type === 'video') {
+                lightboxContent.innerHTML = `
+                    <video controls autoplay>
+                        <source src="${item.src}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+            }
+
+            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentGalleryItems.length}`;
+        }
+
+        function showPrevLightboxItem() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + currentGalleryItems.length) % currentGalleryItems.length;
+            updateLightboxContent();
+        }
+
+        function showNextLightboxItem() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % currentGalleryItems.length;
+            updateLightboxContent();
+        }
+
+        // Music Control
+        let isMusicPlaying = false;
+
+        function playMusic() {
+            // In a real implementation, you would play actual music
+            // This is just a placeholder for the functionality
+            isMusicPlaying = true;
+            musicIcon.textContent = '🎵';
+        }
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                // Pause music in real implementation
+                musicIcon.textContent = '🔇';
+            } else {
+                // Play music in real implementation
+                musicIcon.textContent = '🎵';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        musicControl.addEventListener('click', toggleMusic);
+
+        // Easter Egg
+        easterEgg.addEventListener('click', () => {
+            hiddenMessage.classList.toggle('show-message');
+            setTimeout(() => {
+                hiddenMessage.classList.remove('show-message');
+            }, 3000);
+        });
+
+        // Create Floating Hearts
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '💖';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDuration = `${15 + Math.random() * 10}s`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                heart.style.fontSize = `${1 + Math.random() * 1.5}rem`;
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // Create Stars for Final Page
+        function createStars() {
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                star.style.animationDuration = `${3 + Math.random() * 4}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create Confetti
+        function createConfetti() {
+            const colors = ['#ff6b8b', '#ffd166', '#06d6a0', '#118ab2', '#ef476f', '#a18cd1'];
+            for (let i = 0; i < 200; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDuration = `${2 + Math.random() * 3}s`;
+                confetti.style.width = `${8 + Math.random() * 8}px`;
+                confetti.style.height = confetti.style.width;
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
